@@ -2,6 +2,17 @@ import random
 import json
 import math
 
+DATASET: list[dict[str, list[str]]] = [
+    {
+        "question": ["我", "喜歡", "吃"],
+        "answer": "蘋果"
+    },
+    {
+        "question": ["電腦", "裡", "有"],
+        "answer": "CPU"
+    }
+]
+
 DIMENSION_COUNT: int = 3
 
 def get_random_point() -> list[float]:
