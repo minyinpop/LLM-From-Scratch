@@ -5,11 +5,11 @@ import math
 DATASET: list[dict[str, list[str]]] = [
     {
         "question": ["我", "喜歡", "吃"],
-        "answer": "蘋果"
+        "answer": ["蘋果", "香蕉"]
     },
     {
         "question": ["電腦", "裡", "有"],
-        "answer": "CPU"
+        "answer": ["CPU"]
     }
 ]
 
@@ -23,20 +23,35 @@ def get_random_point() -> list[float]:
 
     return vector
 
-input_tokens: list[str] = [
-    "我",
-    "喜歡",
-    "吃",
-    "蘋果",
-    "香蕉",
-    "CPU"
-]
+vocabulary_table: list[str] = []
+
+# 建立單辭表
+for data in DATASET:
+    for question_word in data["question"]:
+        if question_word in vocabulary_table:
+            continue
+
+        vocabulary_table.append(question_word)
+
+    for answer_word in data["answer"]:
+        if answer_word in vocabulary_table:
+            continue
+
+        vocabulary_table.append(answer_word)
+
+print("")
+print(f"vocabulary_table: {json.dumps(
+    vocabulary_table,
+    ensure_ascii=False,
+    indent=4
+)}")
+# ===
 
 embedding_table: dict[str, list[float]] = {}
 
-# 使 token 隨機分布在向量空間
-for token in input_tokens:
-    embedding_table[token] = get_random_point()
+# 建立向量表
+for vocabulary in vocabulary_table:
+    embedding_table[vocabulary] = get_random_point()
 
 print("")
 print(f"embedding_table: {json.dumps(
@@ -46,17 +61,20 @@ print(f"embedding_table: {json.dumps(
 )}")
 # ===
 
-question: list[str] = [
-    "我",
-    "喜歡",
-    "吃"
-]
+subject: dict[str, list[str]] = DATASET[random.randint(0, len(DATASET) - 1)]
 
 question_vectors: list[list[float]] = []
 
 # 獲取問題的向量位置
-for word in question:
+for word in subject["question"]:
     question_vectors.append(embedding_table[word])
+
+print("")
+print(f"subject: {json.dumps(
+    subject,
+    ensure_ascii=False,
+    indent=4
+)}")
 
 print("")
 print(f"question_vector: {json.dumps(
@@ -96,6 +114,13 @@ answer_vectors: list[list[float]] = []
 # 獲取答案的向量位置
 for word in answer:
     answer_vectors.append(embedding_table[word])
+
+print("")
+print(f"answer: {json.dumps(
+    answer,
+    ensure_ascii=False,
+    indent=4
+)}")
 
 print("")
 print(f"answer_vectors: {json.dumps(
@@ -193,3 +218,8 @@ print("")
 print(f"best_pair_word: {best_pair_word}")
 print(f"best_pair_distance: {best_pair_distance}")
 # ===
+
+print("")
+print(f"題目：{"".join(subject['question'])}")
+print(f"答案：{" / ".join(subject['answer'])}")
+print(f"選擇：{best_pair_word}")
