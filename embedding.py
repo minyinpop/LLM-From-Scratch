@@ -118,32 +118,10 @@ for epoch in range(0, 20):
             )}")
         # ===
 
-        answer_vectors: list[list[float]] = []
-
-        # 獲取答案的向量位置
-        for word in vocabulary_table:
-            answer_vectors.append(embedding_table[word])
-
-        if DEBUG_MODE:
-            print("")
-            print(f"vocabulary_table: {json.dumps(
-                vocabulary_table,
-                ensure_ascii=False,
-                indent=4
-            )}")
-
-            print("")
-            print(f"answer_vectors: {json.dumps(
-                answer_vectors,
-                ensure_ascii=False,
-                indent=4
-            )}")
-        # ===
-
         differences: list[list[float]] = []
 
         # 計算自身與目標的向量差值
-        for vector in answer_vectors:
+        for vector in embedding_table.values():
             difference: list[float] = []
 
             for i in range(0, len(vector)):
