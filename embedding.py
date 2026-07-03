@@ -223,3 +223,12 @@ print("")
 print(f"題目：{"".join(subject['question'])}")
 print(f"答案：{" / ".join(subject['answer'])}")
 print(f"選擇：{best_pair_word}")
+
+# TODO rename
+if best_pair_word in subject["answer"]:
+    print("")
+    print("答案正確")
+else:
+    print("")
+    print("答案錯誤")
+# ===
