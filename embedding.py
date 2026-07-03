@@ -2,6 +2,8 @@ import random
 import json
 import math
 
+CORRECT_LEARNING_RATE: float = .1
+
 DATASET: list[dict[str, list[str]]] = [
     {
         "question": ["我", "喜歡", "吃"],
@@ -229,6 +231,19 @@ if best_pair_word in subject["answer"]:
     print("")
     print("答案正確")
 else:
+    for i in range(0, len(embedding_table[best_pair_word])):
+        direction = embedding_table[best_pair_word][i] - average_question_vectors[i]
+        distance = direction * CORRECT_LEARNING_RATE
+        embedding_table[best_pair_word][i] += distance
+
     print("")
     print("答案錯誤")
+
+    print("")
+    print(f"更新後的答案位置: {json.dumps(
+        embedding_table[best_pair_word],
+        ensure_ascii=False,
+        indent=4
+    )}")
 # ===
+
