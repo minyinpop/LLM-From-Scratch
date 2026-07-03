@@ -3,6 +3,7 @@ import json
 import math
 
 CORRECT_LEARNING_RATE: float = .1
+WRONG_LEARNING_RATE: float = .1
 
 DATASET: list[dict[str, list[str]]] = [
     {
@@ -226,24 +227,42 @@ print(f"題目：{"".join(subject['question'])}")
 print(f"答案：{" / ".join(subject['answer'])}")
 print(f"選擇：{best_pair_word}")
 
-# TODO rename
+# 更新單辭的向量座標
 if best_pair_word in subject["answer"]:
-    print("")
-    print("答案正確")
+    pass
 else:
+    # 把正確答案拉近題目中心點
+    print("")
+    print("正確答案")
+
+    for answer_word in subject["answer"]:
+        for i in range(0, len(embedding_table[answer_word])):
+            direction = average_question_vectors[i] - embedding_table[answer_word][i]
+            move_amount = direction * CORRECT_LEARNING_RATE
+            embedding_table[answer_word][i] += move_amount
+
+        print("")
+        print(f"更新後的 {answer_word} 向量位置: {json.dumps(
+            embedding_table[answer_word],
+            ensure_ascii=False,
+            indent=4
+        )}")
+    # ===
+
+    # 把錯誤答案推離題目中心點
+    print("")
+    print("錯誤答案")
+
     for i in range(0, len(embedding_table[best_pair_word])):
         direction = embedding_table[best_pair_word][i] - average_question_vectors[i]
-        distance = direction * CORRECT_LEARNING_RATE
-        embedding_table[best_pair_word][i] += distance
+        move_amount = direction * WRONG_LEARNING_RATE
+        embedding_table[best_pair_word][i] += move_amount
+    # ===
 
     print("")
-    print("答案錯誤")
-
-    print("")
-    print(f"更新後的答案位置: {json.dumps(
+    print(f"更新後的 {best_pair_word} 向量位置: {json.dumps(
         embedding_table[best_pair_word],
         ensure_ascii=False,
         indent=4
     )}")
 # ===
-
